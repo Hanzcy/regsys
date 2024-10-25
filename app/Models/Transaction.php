@@ -21,6 +21,22 @@ class Transaction extends Model
     protected $table = 'transactions';
     protected $guarded = [];
 
+    public function getRevenue()
+    {
+        $paid_transactions = $this->with('user')->where('is_paid', '=', '1')->get();
+        $sum = 0;
+
+        foreach ($paid_transactions as $transaction) {
+            $sum += $transaction->document->cost;
+        }
+
+        return $sum;
+    }
+
+    public function isRejected()
+    {
+        return $this->status == 'rejected';
+    }
     public function isPaid()
     {
         return !($this->is_paid === '0');
@@ -31,29 +47,47 @@ class Transaction extends Model
         return $this->status === 'pending';
     }
 
+    public function getPaidTransactionsCount()
+    {
+      return $this->with('user')->where('is_paid', '=', '1')->count();
+    }
+
     public function setPaid(bool $paid)
     {
         $this->is_paid = $paid;
         $this->save();
     }
+
+    public function getOnProcessTransaction()
+    {
+        $status = ['processing', 'releasing'];
+        return $this->wherein('status', $status)->get();
+    }
+
     public function getReleasedCount()
     {
         return $this->where('status', 'released')->count();
     }
+
     public function getOnProcessCount()
     {
-        $status = ['processing', 'releasing', 'paid'];
+        $status = ['processing', 'releasing'];
         return $this->wherein('status', $status)->count();
     }
+
     public function getPendingCount(): int
     {
         return $this->with('user')->where('status', 'pending')->count();
     }
+
     public function getTransactions(): LengthAwarePaginator
     {
+        $status = ['processing', 'releasing', 'pending', 'rejected'];
         return $this->with('user')
-            ->whereNotLike('status', '%released%')
-            ->orderBy('needed_date', 'asc')->paginate(5);
+            ->whereIn('status', $status)
+            ->orderBy('needed_date', 'asc')
+            ->orderBy('requested_date', 'asc')
+            ->paginate(5);
     }
 
     public function purpose()

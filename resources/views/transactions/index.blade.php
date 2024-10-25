@@ -44,25 +44,31 @@
                         </x-card>
                     </a>
                 @endcannot
-                <x-card>
-                    <x-slot:card_title>On Process</x-slot:card_title>
-                    {{ $on_process_count }}
-                </x-card>
-                @cannot('view-treasury')
+                <a href="/search?q=on process">
                     <x-card>
-                        <x-slot:card_title>Released</x-slot:card_title>
-                        {{ $released_count }}
+                        <x-slot:card_title>On Process</x-slot:card_title>
+                        {{ $on_process_count }}
                     </x-card>
+                </a>
+                @cannot('view-treasury')
+                    <a href="/search?q=released">
+                        <x-card>
+                            <x-slot:card_title>Released</x-slot:card_title>
+                            {{ $released_count }}
+                        </x-card>
+                    </a>
                 @endcannot
                 @can('view-treasury')
                     <x-card>
-                        <x-card>
-                            <x-slot:card_title>Paid</x-slot:card_title>
-                            TODO
-                        </x-card>
                         <x-slot:card_title>Revenue</x-slot:card_title>
                         {{ $revenue }}
                     </x-card>
+                    <a href="/search?q=paid_transactions">
+                        <x-card>
+                            <x-slot:card_title>Paid</x-slot:card_title>
+                            {{ $paid_transactions_count }}
+                        </x-card>
+                    </a>
                 @endcan
             </x-card-group>
             <x-table>
@@ -94,7 +100,7 @@
                                 <x-table-data>{{ $transaction->user->last_name }}</x-table-data>
                             @endif
                             @cannot('view-treasury')
-                                <x-table-data>{{ $transaction->needed_date }}</x-table-data>
+                                <x-table-data>{{ date('m-d-Y', strtotime( $transaction->needed_date )) }}</x-table-data>
                                 <x-table-data>{{ $transaction->document->document_name }}</x-table-data>
                             @endcannot
                             <x-table-data>{{ $transaction->document->cost }}</x-table-data>
@@ -143,10 +149,12 @@
                                             <x-form-input type="submit"
                                                           class="border-2 border-green-400 bg-green-200 rounded-full font-semibold px-2 py-1"
                                                           value="Mark as paid"/>
-                                            <input type="hidden" name="transaction_id" value="{{ $transaction->id }}">
+                                            <input type="hidden" name="transaction_id"
+                                                   value="{{ $transaction->id }}">
                                             <input type="hidden" name="student_id"
                                                    value="{{ $transaction->student_id }}">
-                                            <input type="hidden" name="cost" value="{{ $transaction->document->cost }}">
+                                            <input type="hidden" name="cost"
+                                                   value="{{ $transaction->document->cost }}">
                                         </form>
                                     @else
                                         <p class="border-2 border-green-400 bg-green-200 rounded-full font-semibold px-2 py-1">
