@@ -171,9 +171,15 @@
     <aside id="sidebar">
         <div class="container mt-5 px-3 py-2">
             <nav class="flex flex-col space-y-4 pb-5 border-b border-white">
+<<<<<<< HEAD
                 <a href="#" class="flex flex-col justify-center items-center m-auto text-white hover:text-blue-600">
                     <img src="{{ asset('/images/profile-icon-design-free-vector.jpg') }}" alt="" class="rounded-full w-16 h-16 sidebar-icon">
                     <span class="text-base font-bold text-center sidebar-label montserrat-regular">@yield('student_id')</span>
+=======
+                <a href="/profile" class="flex flex-col justify-center items-center m-auto text-white hover:text-blue-600">
+                    <img src="{{ asset('/images/profile-icon-design-free-vector.jpg') }}" alt="" class="rounded-full w-16 h-16">
+                    <span class="text-base font-bold text-center"> @yield('student_id')</span>
+>>>>>>> refs/remotes/origin/main
                 </a>
                 <x-nav-link href="/" :active="request()->is('/')">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="size-6 sidebar-icon">

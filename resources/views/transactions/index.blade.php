@@ -27,9 +27,30 @@
                             {{ $released_count }}
                         </x-card>
                     </a>
+<<<<<<< HEAD
                 </div>
             </div>
         </div>
+=======
+                @endcannot
+                @can('view-treasury')
+                    <x-card>
+                        <x-slot:card_title>Revenue</x-slot:card_title>
+                        {{ $revenue }}
+                    </x-card>
+                    <a href="/search?q=paid">
+                        <x-card>
+                            <x-slot:card_title>Paid</x-slot:card_title>
+                            {{ $paid_transactions_count }}
+                        </x-card>
+                    </a>
+                @endcan
+            </x-card-group>
+            <x-table>
+                <x-slot:table_headers>
+                    <x-table-header>Transaction ID</x-table-header>
+                    @if(!Auth::user()->isNormalUser())
+>>>>>>> refs/remotes/origin/main
 
         <div class="flex justify-center mt-10">
             <div class="max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto p-4 overflow-hidden" style="background-color: rgba(0, 0, 85, 0.9); box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.7); border-radius: 15px;">
@@ -94,6 +115,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                         </svg>
                                     </a>
+<<<<<<< HEAD
                                     @can('view-treasury')
                                         @if(!$transaction->is_paid)
                                             <form action="/journals" method="post">
@@ -116,5 +138,46 @@
                 </x-table>
             </div>
         </div>
+=======
+                                @endcan
+                                <a href="/transactions/{{ $transaction->id }}/show"
+                                   class=" text-white bg-green-600 hover:bg-green-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor" class="size-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                    </svg>
+                                </a>
+                                @can('view-treasury')
+                                    @if(!$transaction->is_paid)
+                                        <form action="/journals" method="post">
+                                            @csrf
+                                            <x-form-input type="submit"
+                                                          class="border-2 border-green-400 bg-green-200 rounded-full font-semibold px-2 py-1"
+                                                          value="Mark as paid"/>
+                                            <input type="hidden" name="transaction_id"
+                                                   value="{{ $transaction->id }}">
+                                            <input type="hidden" name="student_id"
+                                                   value="{{ $transaction->student_id }}">
+                                            <input type="hidden" name="cost"
+                                                   value="{{ $transaction->document->cost }}">
+                                            <input type="hidden" name="page" value="{{ request()->input('page') }}">
+                                        </form>
+                                    @else
+                                        <p class="border-2 border-green-400 bg-green-200 rounded-full font-semibold px-2 py-1">
+                                            Paid</p>
+                                    @endif
+                                @endcan
+                            </x-table-data>
+                        </tr>
+                    @endforeach
+                </x-slot:table_body>
+                <x-slot:table_links>{{ $transactions->links() }}</x-slot:table_links>
+            </x-table>
+        @endcan
+        {{--admin dashboard end--}}
+>>>>>>> refs/remotes/origin/main
     </x-layout-main>
 @endsection

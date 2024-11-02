@@ -1,17 +1,23 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('example', function () {
-    $response = $this->get('/');
+uses(RefreshDatabase::class);
 
-    $response->assertStatus(200);
-});
+test('user can login', function () {
 
-test('User\'s invalid format student id cannot register', function () {
-    $user = User::factory()->create([
-        'student_id' => '2022-1*$42'
-    ]);
-    $response = $this->actingAs($user)->get('/register');
-    $response->assertStatus(200);
+    $userData = [
+        'student_id' => "2022-10302",
+        'email' => 'ronaldcurzon@gmail.com',
+        'password' => 'passwordko',
+    ];
+
+    $user = User::factory()->create($userData);
+
+    $response = $this->post('/login', $userData);
+
+    $response->assertStatus(302);
+    $response->assertRedirect('/');
+
 });
